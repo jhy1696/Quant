@@ -4,19 +4,20 @@ import time
 from datetime import datetime
 from pykrx import stock
 
-api_key = '' # OpenDart API KEY
-stock_names = ['003690'] #삼성전자 종목코드
+api_key = '15e9f5e31152655026742b1e181abfe5aba75419' # OpenDart API KEY
+#stock_names = ['029530'] #삼성전자 종목코드
+stock_names = stock.get_market_ticker_list(str(datetime.today()).split()[0].replace('-',''), market='KOSPI')
 dart = OpenDartReader(api_key)
 
 # 정리된 Data. index 가 없으면 추가가 안되므로 dummy를 하나 넣어둔다.
-df2 = pd.DataFrame(columns=['유동자산', '자산총계', '비유동자산', '부채총계', '자본총계', '매출액', '매출총이익', '영업이익',
+df2 = pd.DataFrame(columns=['유동자산', '자산총계', '비유동자산', '부채총계', '자본총계', '매출ß액', '매출총이익', '영업이익',
                             '당기순이익', '영업활동현금흐름', '잉여현금흐름', '시가총액'], index=['1900-01-01']) 
 
 # '11013'=1분기보고서, '11012' =반기보고서, '11014'=3분기보고서, '11011'=사업보고서
 reprt_code = ['11013', '11012', '11014', '11011']
 
 for stocks in stock_names:    
-    fileName = f'C:/Users/USER/Desktop/PythonQuant/result_{str(stocks)}.xlsx'
+    #fileName = f'C:/Users/USER/Desktop/PythonQuant/result_{str(stocks)}.xlsx'
     for i in range(2021, 2022): # OpenDart는 2015년부터 정보를 제공한다.
         # 더미 리스트 초기화
         current_assets = [0, 0, 0, 0] # 유동자산
@@ -125,7 +126,7 @@ for stocks in stock_names:
                 df2.tail()
             time.sleep(0.2) # 잦은 API 호출은 서버에서 IP 차단을 당하므로 호출 간격을 둔다.
     df2.drop(['1900-01-01'], inplace=True) # 첫 행 drop
-    df2.to_excel(fileName) # 파일 저장. 저장할 때 파일의 경로지정을 해야 함. 각 종목코드별로 다른 이름으로 저장
+    #df2.to_excel(fileName) # 파일 저장. 저장할 때 파일의 경로지정을 해야 함. 각 종목코드별로 다른 이름으로 저장
     pd.set_option("display.max_columns", None)
     #display(df2)
     #df2 = pd.DataFrame(columns=['유동자산', '자산총계', '비유동자산', '부채총계', '자본총계', '매출액', '매출총이익', '영업이익',
